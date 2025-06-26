@@ -1,0 +1,25 @@
+{
+  // 保存的时候开启自动修复
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "never",
+    "source.fixAll.eslint": "explicit"
+  },
+  // 强制新文件使用 LF
+  "files.eol": "\n",
+  // 设置 Tab 缩进为 2 个空格
+  "editor.tabSize": 2,
+  // 文件保存时自动格式化
+  "editor.formatOnSave": true,
+  // 默认格式化工具选择 prettier
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+  },
+  "commentTranslate.hover.enabled": false
+}

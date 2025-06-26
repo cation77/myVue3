@@ -1,0 +1,6 @@
+assets
+package.json
+build
+dist
+node_modules
+*md
