@@ -9,7 +9,7 @@
       @mouseleave="handleMouseleave"
     ></canvas>
 
-    <canvas class="canvasBox previewCanvasBox" ref="previewRef"></canvas>
+    <canvas class="previewCanvasBox" ref="previewRef"></canvas>
     <div
       class="absolute flex items-center justify-end gap-[10px] top-[380px]"
       style=""
@@ -104,8 +104,8 @@ const handleClear = () => {
 };
 
 const handleSave = () => {
-  if (!canvasRef.value) return;
-  const dataUrl = canvasRef.value.toDataURL('image/png');
+  if (!previewRef.value) return;
+  const dataUrl = previewRef.value.toDataURL('image/png');
   const link = document.createElement('a');
   link.download = 'signature.png';
   link.href = dataUrl;
