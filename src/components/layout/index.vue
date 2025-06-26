@@ -31,7 +31,8 @@ import Navbar from './Navbar.vue';
 
 const barList = [
   { id: 1, name: '首页', path: '/home' },
-  { id: 2, name: '虚拟列表', path: '/masonry' }
+  { id: 2, name: '虚拟列表', path: '/masonry' },
+  { id: 2, name: '验证', path: '/realization' }
 ];
 </script>
 

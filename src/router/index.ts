@@ -16,6 +16,11 @@ const routes = [
         path: '/masonry',
         name: 'masonryPage',
         component: () => import('@/views/masonry/index.vue')
+      },
+      {
+        path: '/realization',
+        name: 'realization',
+        component: () => import('@/views/realization/index.vue')
       }
     ]
   }
