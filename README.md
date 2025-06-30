@@ -1,5 +1,12 @@
 # Vue 3 + TypeScript + Vite
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## pinia
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+## tailwind
+
+- 原子化设计
+- 开发效率高
+- 响应性又好
+- 样式隔离强
+
+缺点：学习曲线陡，需要记忆大量类名和约定
