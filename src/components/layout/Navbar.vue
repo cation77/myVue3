@@ -1,26 +1,33 @@
 <template>
-  <div class="navbar">
-    <div class="left-menu">
-      <div class="logo-container">
-        <router-link key="expand" class="sidebar-logo-link" to="/">
-          <img :src="logo" class="sidebar-logo" />
-          <div class="sidebar-title">{{ props.title || 'ICE SYS' }}</div>
+  <div class="navbar flex justify-between items-center h-14">
+    <div class="flex items-center">
+      <div class="flex items-center">
+        <router-link key="expand" class="flex items-center" to="/">
+          <img :src="logo" class="w-8 h-8 mr-3" />
+          <div class="sidebar-title">
+            {{ props.title || 'ICE SYS' }}
+          </div>
         </router-link>
       </div>
+    </div>
+
+    <div
+      class="flex cursor-pointer theme-btn p-2 rounded-lg flex justify-center items-center space-x-1 text-muted bg-muted hover:bg-main/80"
+      @click="toggleTheme"
+    >
+      切换主题
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import toggleTheme from '@/utils/toggleTheme';
 import logo from '@/assets/vue.svg';
 const props = defineProps<{ title?: string }>();
 </script>
 
 <style lang="scss" scoped>
 .navbar {
-  display: flex;
-  justify-content: space-between;
-  height: 60px;
   overflow: hidden;
   position: relative;
   background: #3d6fe4;
@@ -28,33 +35,9 @@ const props = defineProps<{ title?: string }>();
   z-index: 1002;
   padding: 0 20px;
 
-  .left-menu {
-    display: flex;
-    align-items: center;
-
-    .logo-container {
-      display: flex;
-      align-items: center;
-
-      .sidebar-logo {
-        width: 36px;
-        height: 36px;
-        margin-right: 12px;
-      }
-
-      .sidebar-logo-link {
-        display: flex;
-        align-items: center;
-      }
-
-      .sidebar-title {
-        font-family: PingFang SC;
-        font-size: 22px;
-        font-variation-settings: 'opsz' auto;
-        color: #ffffff;
-        line-height: 1;
-      }
-    }
+  .sidebar-title {
+    font-family: PingFang SC;
+    font-size: 22px;
   }
 }
 </style>

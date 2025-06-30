@@ -1,0 +1,15 @@
+:root {
+  /* 光亮主题 */
+  --background-color: #ffffff;
+  background-color: var(--background-color);
+}
+
+.dark {
+  /* 暗黑主题 */
+  --background-color: #000000;
+}
+
+::view-transition-new(root),
+::view-transition-old(root) {
+  animation: none;
+}
