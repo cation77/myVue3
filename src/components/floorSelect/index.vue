@@ -20,7 +20,7 @@ import { ref, onMounted } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
 import { UpOutlined, DownOutlined } from '@ant-design/icons-vue';
 import myButton from '@/components/myButton/index.vue';
-import useScroll from '@/hooks/scroll';
+import useScroll from '@/hooks/useScroll';
 
 type Floor = {
   label: string;
