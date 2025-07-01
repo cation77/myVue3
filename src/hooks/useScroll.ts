@@ -13,12 +13,12 @@ const useScroll = (id: string, direction: IDirection = 'column') => {
     if (cation === 'next') {
       const nextScroll = client + scrollLeft;
       if (nextScroll < scrollWigdh) {
-        scrollRef.value?.scrollTo({ top: nextScroll, behavior: 'smooth' });
+        scrollRef.value?.scrollTo({ left: nextScroll, behavior: 'smooth' });
       }
     } else if (cation === 'prev') {
       const prevScroll = scrollLeft - client;
       if (prevScroll + client > 0) {
-        scrollRef.value?.scrollTo({ top: prevScroll, behavior: 'smooth' });
+        scrollRef.value?.scrollTo({ left: prevScroll, behavior: 'smooth' });
       }
     }
   };
