@@ -1,39 +1,41 @@
-import type { Ref } from 'vue';
+import { useTemplateRef, type Ref } from 'vue';
 
 type Iaction = 'next' | 'prev';
 type IDirection = 'column' | 'row';
 
-const useScroll = (el: Ref, direction: IDirection = 'column') => {
+const useScroll = (id: string, direction: IDirection = 'column') => {
+  const scrollRef = useTemplateRef(id) as Ref<HTMLElement>;
+
   const scrollX = (cation: Iaction) => {
-    const scrollWigdh = el.value?.scrollWidth;
-    const scrollLeft = el.value?.scrollLeft;
-    const client = el.value?.clientWidth;
+    const scrollWigdh = scrollRef.value?.scrollWidth;
+    const scrollLeft = scrollRef.value?.scrollLeft;
+    const client = scrollRef.value?.clientWidth;
     if (cation === 'next') {
       const nextScroll = client + scrollLeft;
       if (nextScroll < scrollWigdh) {
-        el.value?.scrollTo({ top: nextScroll, behavior: 'smooth' });
+        scrollRef.value?.scrollTo({ top: nextScroll, behavior: 'smooth' });
       }
     } else if (cation === 'prev') {
       const prevScroll = scrollLeft - client;
       if (prevScroll + client > 0) {
-        el.value?.scrollTo({ top: prevScroll, behavior: 'smooth' });
+        scrollRef.value?.scrollTo({ top: prevScroll, behavior: 'smooth' });
       }
     }
   };
 
   const scrollY = (cation: Iaction) => {
-    const scrollHeight = el.value?.scrollHeight;
-    const scrollTop = el.value?.scrollTop;
-    const clientHeight = el.value?.clientHeight;
+    const scrollHeight = scrollRef.value?.scrollHeight;
+    const scrollTop = scrollRef.value?.scrollTop;
+    const clientHeight = scrollRef.value?.clientHeight;
     if (cation === 'next') {
       const nextScrollTop = clientHeight + scrollTop;
       if (nextScrollTop < scrollHeight) {
-        el.value?.scrollTo({ top: nextScrollTop, behavior: 'smooth' });
+        scrollRef.value?.scrollTo({ top: nextScrollTop, behavior: 'smooth' });
       }
     } else if (cation === 'prev') {
       const prevScrollTop = scrollTop - clientHeight;
       if (prevScrollTop + clientHeight >= 0) {
-        el.value?.scrollTo({ top: prevScrollTop, behavior: 'smooth' });
+        scrollRef.value?.scrollTo({ top: prevScrollTop, behavior: 'smooth' });
       }
     }
   };

@@ -28,9 +28,8 @@ type Floor = {
 };
 const floorList = ref<Floor[]>([]);
 
-const listBoxRef = ref();
 const activeFloor = ref();
-const { prev, next } = useScroll(listBoxRef, 'column');
+const { prev, next } = useScroll('listBoxRef', 'column');
 const handleClick = useDebounceFn((evType: 'next' | 'prev') => {
   if (evType === 'next') {
     next();
