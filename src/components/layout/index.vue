@@ -1,19 +1,18 @@
 <template>
-  <div class="app-wrapper overflow-hidden flex">
-    <div class="drawer-bg" />
+  <div class="w-screen h-screen overflow-hidden flex flex-col">
     <Navbar />
-    <div class="main-container flex">
-      <div class="app-bar p-2 flex">
+    <div class="w-full flex flex-1 bg-white dark:bg-gray-800">
+      <div class="w-28 h-full p-2 flex flex-col gap-2">
         <RouterLink
           :to="item.path"
-          class="bar-item text-center"
+          class="bar-item text-center text-gray-900 dark:text-white"
           v-for="item in barList"
           :key="item.id"
         >
           {{ item.name }}
         </RouterLink>
       </div>
-      <div class="app-main p-3 overflow-hidden">
+      <div class="h-full flex-1 p-3 overflow-hidden">
         <router-view v-slot="{ Component, route }">
           <transition name="fade-transform" mode="out-in">
             <keep-alive>
@@ -36,36 +35,4 @@ const barList = [
 ];
 </script>
 
-<style lang="scss" scoped>
-.app-wrapper {
-  flex-direction: column;
-  height: 100vh;
-  width: 100vw;
-  background: rgba(0, 0, 0, 0.3);
-}
-
-.main-container {
-  width: 100%;
-  flex: 1;
-  .app-bar {
-    width: 100px;
-    height: 100%;
-    flex-direction: column;
-    background-color: aquamarine;
-
-    .bar-item {
-      &:hover {
-        color: #fff;
-      }
-      & + .bar-item {
-        margin-top: 12px;
-      }
-    }
-  }
-
-  .app-main {
-    flex: 1;
-    height: 100%;
-  }
-}
-</style>
+<style lang="scss" scoped></style>
