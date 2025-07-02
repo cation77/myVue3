@@ -21,6 +21,11 @@ const routes = [
         path: '/realization',
         name: 'realization',
         component: () => import('@/views/realization/index.vue')
+      },
+      {
+        path: '/asyncForm',
+        name: 'asyncForm',
+        component: () => import('@/views/asyncForm/index.vue')
       }
     ]
   }

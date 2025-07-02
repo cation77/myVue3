@@ -37,7 +37,7 @@ export default defineConfig(({ mode }) => {
     server: {
       host: '0.0.0.0', // 服务器主机名，如果允许外部访问，可设置为"0.0.0.0"
       open: true,
-      port: 8080,
+      port: 8090,
       proxy: {
         '/api': {
           target: '/',
