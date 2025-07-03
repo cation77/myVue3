@@ -3,7 +3,10 @@ import vue from '@vitejs/plugin-vue';
 import autoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
 import tailwindcss from '@tailwindcss/vite';
-import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers';
+import {
+  AntDesignVueResolver,
+  ElementPlusResolver
+} from 'unplugin-vue-components/resolvers';
 import { resolve } from 'path';
 
 // https://vitejs.dev/config/
@@ -19,12 +22,14 @@ export default defineConfig(({ mode }) => {
         resolvers: [
           AntDesignVueResolver({
             importStyle: false // css in js
-          })
+          }),
+          ElementPlusResolver()
         ]
       }),
       autoImport({
         imports: ['vue', 'vue-router'],
-        dts: 'src/auto-imports.d.ts'
+        dts: 'src/auto-imports.d.ts',
+        resolvers: [ElementPlusResolver()]
       })
     ],
     resolve: {
