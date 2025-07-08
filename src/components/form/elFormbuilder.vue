@@ -1,7 +1,19 @@
 <template>
-  <el-form ref="formRef" :rules="rules" :model="modelValue" label-width="120px">
-    <el-row :gutter="20">
-      <el-col v-for="item in items" :key="item.key" :span="item.span || 24">
+  <el-form
+    ref="formRef"
+    :rules="rules"
+    :model="modelValue"
+    :label-width="labelOptions?.width"
+    :label-position="labelOptions?.position"
+    :label-suffix="labelOptions?.suffix"
+  >
+    <el-row :gutter="gutter">
+      <el-col
+        v-for="item in items"
+        :key="item.key"
+        :span="item.span || 24"
+        v-show="!item.hide"
+      >
         <el-form-item :label="item.label" :prop="item.key">
           <slot :name="item.key">
             <componentItem :item="item"></componentItem>
@@ -24,8 +36,29 @@ import {
   ElCheckboxGroup,
   ElCheckbox
 } from 'element-plus';
+import { omit } from 'lodash-es';
+import type { FormRules } from 'element-plus';
+import type { IFormItem } from './types';
 
-const props = defineProps(['formItems', 'rules']);
+interface IProps {
+  formItems: Array<IFormItem>;
+  rules: FormRules;
+  labelOptions?: {
+    width?: string | number;
+    position?: 'left' | 'right' | 'top';
+    suffix?: string;
+  };
+  gutter?: number;
+}
+
+const props = withDefaults(defineProps<IProps>(), {
+  labelOptions: () => ({
+    width: '120px',
+    position: 'right',
+    suffix: ''
+  }),
+  gutter: 20
+});
 
 const modelValue = defineModel() as Ref<Record<string, any>>;
 
@@ -64,9 +97,7 @@ const compoentMap: Record<string, Component> = {
 const rootProps = ['label', 'type', 'value', 'span'];
 function getProps(item: Record<string, any>) {
   if (item.props) return item.props;
-  const { label, type, value, span, ...rest } = item;
-  return rest;
-  // return omit(item, rootProps);
+  return omit(item, rootProps);
 }
 
 function getComponent(item: Record<string, any>) {

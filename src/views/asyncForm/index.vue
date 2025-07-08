@@ -1,23 +1,27 @@
 <template>
   <elFormbuilder ref="formRef" :formItems v-model="formData" :rules>
-    <template #tip>特别有时候</template>
+    <template #tip>成年了</template>
   </elFormbuilder>
 
   <el-button type="primary" @click="handleSubmit">提交</el-button>
 </template>
 
 <script lang="ts" setup>
+import { ref, computed, useTemplateRef } from 'vue';
 import elFormbuilder from '@/components/form/elFormbuilder.vue';
+import type { IFormItem } from '@/components/form/types';
 
 const formInstance = useTemplateRef<HTMLFormElement>('formRef');
-
-const formItems = [
+const age = ref(0);
+const formItems = computed<IFormItem[]>(() => [
   {
     label: '姓名',
     type: 'input',
     key: 'name',
     span: 12,
-    props: { placeholder: '请输入姓名' }
+    props: {
+      placeholder: '请输入姓名'
+    }
   },
   {
     label: '年龄',
@@ -25,19 +29,25 @@ const formItems = [
     key: 'age',
     span: 12,
     props: {
-      controls: false
+      controls: false,
+      onChange: (e: any) => {
+        age.value = e;
+      }
     }
   },
+
   {
     label: '提示',
-    key: 'tip'
+    key: 'tip',
+    hide: age.value < 18
   },
 
   {
     label: '性别',
     type: 'select',
-    key: 'sex',
+    key: 'gender',
     span: 16,
+    hide: age.value < 18,
     props: {
       placeholder: '请选择性别',
       options: [
@@ -46,7 +56,7 @@ const formItems = [
       ]
     }
   }
-];
+]);
 
 const formData = ref({});
 const rules = {
