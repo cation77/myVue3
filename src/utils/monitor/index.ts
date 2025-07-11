@@ -177,15 +177,22 @@ class FrontendMonitor {
   capturePerformance() {
     window.addEventListener('load', () => {
       setTimeout(() => {
-        const timing = performance.timing;
+        const nt = performance.getEntriesByType(
+          'navigation'
+        )[0] as PerformanceNavigationTiming;
+        if (!nt) return;
         const perfData = {
           type: 'performance',
-          dns: timing.domainLookupEnd - timing.domainLookupStart,
-          tcp: timing.connectEnd - timing.connectStart,
-          ttfb: timing.responseStart - timing.requestStart,
-          download: timing.responseEnd - timing.responseStart,
-          domReady: timing.domContentLoadedEventEnd - timing.navigationStart,
-          loadPage: timing.loadEventEnd - timing.navigationStart,
+          dns: nt.domainLookupEnd - nt.domainLookupStart,
+          tcp: nt.connectEnd - nt.connectStart,
+          ssl:
+            nt.secureConnectionStart > 0
+              ? nt.connectEnd - nt.secureConnectionStart
+              : 0,
+          ttfb: nt.responseStart - nt.requestStart,
+          download: nt.responseEnd - nt.responseStart,
+          domContentLoaded: nt.domContentLoadedEventEnd - nt.startTime,
+          load: nt.loadEventEnd - nt.startTime,
           fcp: this.getFirstContentfulPaint(),
           lcp: this.getLargestContentfulPaint(),
           fid: this.getFirstInputDelay(),
