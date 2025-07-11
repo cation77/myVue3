@@ -22,7 +22,8 @@ interface IErrorData {
   reason?: string;
   tagName?: string;
   src?: string;
-  // [x: string]: any;
+  content?: string;
+  [x: string]: any;
 }
 
 type ILevel = 'info' | 'warn' | 'error';
@@ -32,7 +33,7 @@ type APIURL = string | URL;
 class FrontendMonitor {
   config: IConfig;
   cache: IErrorData[] = [];
-  initialized = false;
+  initialized: boolean;
   defaultConfig: IConfig = {
     appId: 'default-app',
     reportUrl: 'https://api.monitor.example.com/report',
@@ -44,8 +45,10 @@ class FrontendMonitor {
   };
   constructor(config: Partial<IConfig>) {
     this.config = Object.assign(this.defaultConfig, config);
+    this.log(`监控配置：${JSON.stringify(this.config)}`);
     this.cache = [];
     this.initialized = false;
+    this.init();
   }
 
   init() {
@@ -54,8 +57,19 @@ class FrontendMonitor {
     // 初始化日志
     this.log('SDK初始化完成');
 
+    // 错误监控
     if (this.config.captureError) {
       this.setupCaptureError();
+    }
+
+    // 性能监控
+    if (this.config.capturePerformance) {
+      this.capturePerformance();
+    }
+
+    // 用户行为监控
+    if (this.config.captureBehavior) {
+      this.setupBehaviorTracking();
     }
 
     // 设置定时上报
@@ -163,21 +177,19 @@ class FrontendMonitor {
   capturePerformance() {
     window.addEventListener('load', () => {
       setTimeout(() => {
-        const timing = new PerformanceNavigationTiming();
+        const timing = performance.timing;
         const perfData = {
           type: 'performance',
           dns: timing.domainLookupEnd - timing.domainLookupStart,
           tcp: timing.connectEnd - timing.connectStart,
-          request: timing.responseEnd - timing.requestStart,
-          response: timing.responseEnd - timing.responseStart,
-          dom:
-            timing.domComplete -
-            timing.domInteractive -
-            timing.domContentLoadedEventEnd,
-          whiteScreen: timing.domContentLoadedEventStart - timing.fetchStart,
+          ttfb: timing.responseStart - timing.requestStart,
+          download: timing.responseEnd - timing.responseStart,
+          domReady: timing.domContentLoadedEventEnd - timing.navigationStart,
+          loadPage: timing.loadEventEnd - timing.navigationStart,
           fcp: this.getFirstContentfulPaint(),
           lcp: this.getLargestContentfulPaint(),
           fid: this.getFirstInputDelay(),
+          userAgent: navigator.userAgent,
           timestamp: Date.now()
         };
 
@@ -189,6 +201,86 @@ class FrontendMonitor {
       this.setupAPIMonitoring();
     });
     this.log('性能监控已启用');
+  }
+
+  // 用户行为跟踪
+  setupBehaviorTracking() {
+    this.capturePageView();
+
+    // 路由变化监听 (SPA)
+    this.setupSPARouterTracking();
+
+    document.addEventListener(
+      'click',
+      (event) => {
+        const target = event.target as HTMLElement;
+        const tagName = target.tagName.toLowerCase();
+
+        let content = '';
+
+        if (tagName === 'button') {
+          content =
+            target.textContent?.trim() ||
+            target.getAttribute('aria-label') ||
+            '';
+        } else if (tagName === 'a') {
+          content =
+            target.textContent?.trim() || target.getAttribute('href') || '';
+        }
+
+        if (content) {
+          this.captureEvent('click', {
+            tagName,
+            content: content?.slice(0, 100) || '',
+            x: event.clientX,
+            y: event.clientY
+          });
+        }
+      },
+      { capture: true }
+    );
+    this.log('行为监控已启用');
+  }
+
+  // 捕获页面访问
+  capturePageView() {
+    const pageData = {
+      type: 'page_view',
+      url: window.location.href,
+      referrer: document.referrer,
+      title: document.title,
+      userAgent: navigator.userAgent,
+      timestamp: Date.now()
+    };
+
+    this.cacheData(pageData);
+  }
+
+  // SPA路由变化监听
+  setupSPARouterTracking() {
+    // 监听路由 history 变化
+    const originalPushState = window.history.pushState;
+    const originalReplaceState = window.history.replaceState;
+
+    history.pushState = function (...args) {
+      originalPushState.apply(this, args);
+      window.dispatchEvent(new Event('pushstate'));
+      // window.dispatchEvent(new Event('locationchange'));
+    };
+
+    history.replaceState = function (...args) {
+      originalReplaceState.apply(this, args);
+      window.dispatchEvent(new Event('replacestate'));
+      // window.dispatchEvent(new Event('locationchange'));
+    };
+
+    window.addEventListener('popstate', () => {
+      window.dispatchEvent(new Event('locationchange'));
+    });
+
+    window.addEventListener('locationchange', () => {
+      this.capturePageView();
+    });
   }
 
   // API请求监控
@@ -302,6 +394,7 @@ class FrontendMonitor {
       method: type,
       duration: endTime - startTime,
       status,
+      userAgent: navigator.userAgent,
       timestamp: Date.now()
     };
     this.cacheData(apiData);
