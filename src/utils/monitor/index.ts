@@ -1,4 +1,4 @@
-type IConfig = {
+interface IConfig {
   appId: string;
   reportUrl: string;
   maxCache: number;
@@ -6,7 +6,19 @@ type IConfig = {
   captureError: boolean;
   capturePerformance: boolean;
   captureBehavior: boolean;
-};
+  debugger: boolean;
+}
+
+interface MonitorConfig {
+  appId: string;
+  reportUrl: string;
+  maxCache?: number;
+  reportInterval?: number;
+  captureError?: boolean;
+  capturePerformance?: boolean;
+  captureBehavior?: boolean;
+  debugger?: boolean;
+}
 
 interface IErrorData {
   type: string;
@@ -41,9 +53,10 @@ class FrontendMonitor {
     reportInterval: 10000,
     captureError: true,
     capturePerformance: true,
-    captureBehavior: true
+    captureBehavior: true,
+    debugger: false
   };
-  constructor(config: Partial<IConfig>) {
+  constructor(config: MonitorConfig) {
     this.config = Object.assign(this.defaultConfig, config);
     this.log(`监控配置：${JSON.stringify(this.config)}`);
     this.cache = [];
@@ -446,6 +459,12 @@ class FrontendMonitor {
     if (this.cache.length === 0) return;
     const reportData = [...this.cache];
     this.cache = [];
+
+    if (this.config.debugger) {
+      this.log(`debugger mode: `);
+      console.log(reportData);
+      return;
+    }
 
     // 使用navigator.sendBeacon或XMLHttpRequest上报
     if (isPageExit) {
