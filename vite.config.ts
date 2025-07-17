@@ -7,6 +7,7 @@ import {
   AntDesignVueResolver,
   ElementPlusResolver
 } from 'unplugin-vue-components/resolvers';
+import { visualizer } from 'rollup-plugin-visualizer';
 import { resolve } from 'path';
 
 // https://vitejs.dev/config/
@@ -30,7 +31,8 @@ export default defineConfig(({ mode }) => {
         imports: ['vue', 'vue-router'],
         dts: 'src/auto-imports.d.ts',
         resolvers: [ElementPlusResolver()]
-      })
+      }),
+      visualizer()
     ],
     resolve: {
       alias: {
@@ -51,19 +53,8 @@ export default defineConfig(({ mode }) => {
         }
       }
     },
-    build: {
-      minify: 'terser',
-      sourcemap: false, // 生产环境关闭 sourcemap
-      terserOptions: {
-        compress: {
-          drop_console: true, // 移除所有 console
-          drop_debugger: true, // 移除 debugger
-          pure_funcs: ['console.info'] // 额外移除 console.info
-        },
-        format: {
-          comments: false // 移除注释
-        }
-      }
+    esbuild: {
+      drop: mode === 'production' ? ['console', 'debugger'] : []
     }
   };
 });
