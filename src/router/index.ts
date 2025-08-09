@@ -22,10 +22,15 @@ const routes = [
         name: 'realization',
         component: () => import('@/views/realization/index.vue')
       },
+      // {
+      //   path: '/asyncForm',
+      //   name: 'asyncForm',
+      //   component: () => import('@/views/asyncForm/index.vue')
+      // },
       {
-        path: '/asyncForm',
-        name: 'asyncForm',
-        component: () => import('@/views/asyncForm/index.vue')
+        path: '/panorama',
+        name: 'panorama',
+        component: () => import('@/views/panorama/index.vue')
       }
     ]
   }
